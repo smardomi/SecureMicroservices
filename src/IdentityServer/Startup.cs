@@ -18,10 +18,11 @@ namespace IdentityServer
             services.AddControllersWithViews();
 
             services.AddIdentityServer()
-                .AddInMemoryClients(new List<Client>())
-                .AddInMemoryApiScopes(new List<ApiScope>())
-                .AddInMemoryIdentityResources(new List<IdentityResource>())
-                .AddTestUsers(new List<TestUser>())
+                .AddInMemoryClients(Config.Clients)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                //.AddInMemoryApiResources(Config.ApiResources)
+                //.AddInMemoryIdentityResources(Config.IdentityResources)
+                //.AddTestUsers(Config.TestUsers)
                 .AddDeveloperSigningCredential();
         }
 
