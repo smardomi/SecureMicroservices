@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
+using System.Text.Json;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -78,20 +79,56 @@ namespace IdentityServer
                     new List<string>() { "role" })
           };
 
-        public static List<TestUser> TestUsers =>
-            new List<TestUser>
+        public static List<TestUser> TestUsers
+        {
+            get
             {
-                new TestUser
+                var address = new
                 {
-                    SubjectId = "5BE86359-073C-434B-AD2D-A3932222DABE",
-                    Username = "saeed",
-                    Password = "mardomi",
-                    Claims = new List<Claim>
+                    street_address = "Jalalie",
+                    locality = "Tabriz",
+                    postal_code = 5173986375,
+                    country = "Iran"
+                };
+
+                return new List<TestUser>
+                {
+                    new TestUser
                     {
-                        new Claim(JwtClaimTypes.GivenName, "Saeed"),
-                        new Claim(JwtClaimTypes.FamilyName, "Mardomi")
+                        SubjectId = "556456456",
+                        Username = "saeed",
+                        Password = "mardomi",
+                        Claims =
+                        {
+                            new Claim(JwtClaimTypes.Name, "Saeed Mardomi"),
+                            new Claim(JwtClaimTypes.GivenName, "Saeed"),
+                            new Claim(JwtClaimTypes.FamilyName, "Mardomi"),
+                            new Claim(JwtClaimTypes.Email, "saeedmardomi@hotmail.com"),
+                            new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                            new Claim(JwtClaimTypes.WebSite, "http://smardomi.ir"),
+                            new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(address), IdentityServerConstants.ClaimValueTypes.Json),
+                            new Claim(JwtClaimTypes.Role, "admin")
+                        }
+                    },
+                    new TestUser
+                    {
+                        SubjectId = "456456546",
+                        Username = "Vahid",
+                        Password = "mardomi",
+                        Claims =
+                        {
+                            new Claim(JwtClaimTypes.Name, "Vahid Mardomi"),
+                            new Claim(JwtClaimTypes.GivenName, "Vahid"),
+                            new Claim(JwtClaimTypes.FamilyName, "Mardomi"),
+                            new Claim(JwtClaimTypes.Email, "Vahid@gmail.com"),
+                            new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                            new Claim(JwtClaimTypes.WebSite, "http://Vahid.com"),
+                            new Claim(JwtClaimTypes.Address, JsonSerializer.Serialize(address), IdentityServerConstants.ClaimValueTypes.Json),
+                            new Claim(JwtClaimTypes.Role, "user")
+                        }
                     }
-                }
-            };
+                };
+            }
+        }
     }
 }

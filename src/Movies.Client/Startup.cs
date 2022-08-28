@@ -13,7 +13,6 @@ using Microsoft.Net.Http.Headers;
 using Movies.Client.ApiServices;
 using Movies.Client.HttpHandlers;
 
-
 namespace Movies.Client
 {
     public class Startup
@@ -31,6 +30,10 @@ namespace Movies.Client
             services.AddControllersWithViews();
             services.AddScoped<IMovieApiService, MovieApiService>();
 
+
+            // http operations
+
+            // 1 create an HttpClient used for accessing the Movies.API
             services.AddTransient<AuthenticationDelegatingHandler>();
 
             services.AddHttpClient("MovieAPIClient", client =>
@@ -51,11 +54,22 @@ namespace Movies.Client
 
             services.AddHttpContextAccessor();
 
+            //services.AddSingleton(new ClientCredentialsTokenRequest
+            //{                                                
+            //    Address = "https://localhost:5005/connect/token",
+            //    ClientId = "movieClient",
+            //    ClientSecret = "secret",
+            //    Scope = "movieAPI"
+            //});
+
+            // http operations
+
+
             services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                })
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {

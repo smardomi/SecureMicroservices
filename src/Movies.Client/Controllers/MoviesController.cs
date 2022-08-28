@@ -69,6 +69,7 @@ namespace Movies.Client.Controllers
         }
 
         // GET: Movies/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             return View();

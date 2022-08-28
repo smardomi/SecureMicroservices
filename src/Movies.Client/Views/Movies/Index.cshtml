@@ -4,11 +4,15 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Movies List</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New Movie</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
