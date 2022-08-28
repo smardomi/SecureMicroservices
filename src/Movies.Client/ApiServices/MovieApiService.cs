@@ -7,7 +7,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
+using System.Net.Http.Json;
 using Microsoft.AspNetCore.Authentication;
+using System.Reflection;
 
 namespace Movies.Client.ApiServices
 {
@@ -93,24 +96,63 @@ namespace Movies.Client.ApiServices
 
         }
 
-        public Task<Movie> GetMovie(string id)
+        public async Task<Movie> GetMovie(int id)
         {
-            throw new NotImplementedException();
+            var httpClient = _httpClientFactory.CreateClient("MovieAPIClient");
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                $"/movies/{id}");
+
+            var response = await httpClient.SendAsync(
+                request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var movie = JsonConvert.DeserializeObject<Movie>(content);
+            return movie;
         }
 
-        public Task<Movie> CreateMovie(Movie movie)
+        public async Task<Movie> CreateMovie(Movie movie)
         {
-            throw new NotImplementedException();
+            var random = new Random();
+            movie.Owner = _httpContextAccessor.HttpContext.User.Identity.Name;
+            movie.Id = random.Next(1000000, 9999999);
+
+            var httpClient = _httpClientFactory.CreateClient("MovieAPIClient");
+            
+            var response = await httpClient.PostAsJsonAsync($"/movies", movie).ConfigureAwait(false);
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var createMovie = JsonConvert.DeserializeObject<Movie>(content);
+            return createMovie;
         }
 
-        public Task<Movie> UpdateMovie(Movie movie)
+        public async Task<Movie> UpdateMovie(Movie movie)
         {
-            throw new NotImplementedException();
+            var httpClient = _httpClientFactory.CreateClient("MovieAPIClient");
+
+            var response = await httpClient.PutAsJsonAsync($"/movies/{movie.Id}", movie).ConfigureAwait(false);
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var createMovie = JsonConvert.DeserializeObject<Movie>(content);
+            return createMovie;
         }
 
-        public Task DeleteMovie(int id)
+        public async Task DeleteMovie(int id)
         {
-            throw new NotImplementedException();
+            var httpClient = _httpClientFactory.CreateClient("MovieAPIClient");
+
+            var response = await httpClient.DeleteAsync($"/movies/{id}").ConfigureAwait(false);
+
+            response.EnsureSuccessStatusCode();
+
+            await response.Content.ReadAsStringAsync();
         }
 
         public async Task<UserInfoViewModel> GetUserInfo()
