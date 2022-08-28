@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Movies.Client.ApiServices;
 using Movies.Client.Models;
+using System.Linq;
+using System.Security.Claims;
 
 namespace Movies.Client.Controllers
 {
@@ -25,8 +27,13 @@ namespace Movies.Client.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            await LogTokenAndClaims();
-            return View(await _movieApiService.GetMovies());
+            //await LogTokenAndClaims();
+
+            var firstname = User.Identity.Name;
+
+            var movies = await _movieApiService.GetMovies();
+
+            return View(movies.Where(a=>a.Owner == firstname));
         }
         public async Task LogTokenAndClaims()
         {
