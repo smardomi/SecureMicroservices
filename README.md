@@ -39,4 +39,8 @@ Check the application with logging the system with below credentials;
 * **username - password 1 : saeed - mardomi**
 * **username - password 2 : vahid - mardomi**
 
+## Original Source and Author
+Best Microservice Course.
+Thank you so much.
 
+* [Mehmet Ozkaya](https://github.com/aspnetrun/run-aspnet-identityserver4) 
